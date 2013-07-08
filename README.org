@@ -1,0 +1,21 @@
+#+TITLE: READ ME
+#+DATE: 08 Jul 2013
+* 土豆网python SDK
+  实现了api[[http://api.tudou.com/apidoc/index.php/%25E9%25A6%2596%25E9%25A1%25B5][文档]] 中视频模块与用户模块的所有接口,实现了Oauth授权
+** install
+   #+BEGIN_SRC sh
+   pip -r requirements.txt
+   #+END_SRC
+** Demo
+   #+BEGIN_SRC python
+     from TudouSdk import Tudou
+
+     t = Tudou('app_key', 'app_secret')
+     # t.auth('username', 'password')
+     t.auth()
+     t.upload('/home/yangyu/Downloads/Screencast.mp4', 'emacs视频', '', 'emacs', '21')
+
+   #+END_SRC
+   上面的就是上传视频到土豆网的代码,在执行任何需要授权的操作之前,至少应该执行一次auth方法,土豆网的
+   授权用两种方式,一种是制定用户名与密码,那么可以直接使用http来授权,另一种就是Oauth,所以在调用auth
+   方法时如果指定了username与password,那么就使用http授权,没有指定二者,那么就使用oauth授权.
