@@ -21,6 +21,39 @@ def getNetworkIp():
     s.connect(('google.com', 0))
     return s.getsockname()[0]
 
+def check_channel(channel):
+    """
+    check if the channel is correct
+    Arguments:
+    - `channel`:
+    """
+    channels = {
+        '娱乐'   : 1,
+        '乐活'   : 3,
+        '搞笑'   : 5,
+        '动画'   : 9,
+        '游戏'   : 10,
+        '音乐'   : 14,
+        '体育'   : 15,
+        '科技'   : 21,
+        '电影'   : 22,
+        '财富'   : 24,
+        '教育'   : 25,
+        '汽车'   : 26,
+        '女性'   : 27,
+        '纪录片' : 28,
+        '热点'   : 29,
+        '电视剧' : 30,
+        '综艺'   : 31,
+        '风尚'   : 32,
+        '原创'   : 99
+    }
+    if channel not in channels.keys():
+        print '频道指定错误'
+        sys.exit(1)
+    channelId = channels[channel]
+    return channelId
+
 class Tudou(object):
     """
     """
@@ -160,7 +193,7 @@ class Tudou(object):
         r = requests.get(self.api_url, params = kwargs)
         return r.json()
 
-    def __get_uploadurl(self, title, content, tags, channelId):
+    def __get_uploadurl(self, title, content, tags, channel):
         """
         get the upload url
         Arguments:
@@ -169,11 +202,12 @@ class Tudou(object):
         - `tags`:
         - `channelId`:
         """
+        channelId = check_channel(channel)
         video_info = {
             'title':title,
             'content':content,
             'tags':tags,
-            'channelId':channelId,
+            'channelId':str(channelId),
             'ipAddr':getNetworkIp()
         }
         payload = video_info
@@ -232,9 +266,3 @@ class Tudou(object):
         }
         r = requests.get(self.api_url, params = payload)
         return r.json()
-
-if __name__ == '__main__':
-    t = Tudou('9827e200c6dfe9c8', '64539d6f881f8c2cc1fbe10057f5dc53')
-    # t.auth('yy2012cn@126.com', '8353909')
-    t.auth()
-    t.upload('/home/yangyu/Downloads/Screencast.mp4', 'emacs视频', '', 'emacs', '21')
